@@ -5,6 +5,12 @@ Designed with a **dark theme**, **glowing interactive buttons**, and a **sticky 
 
 ---
 
+## 🚀 Project Checkpoints
+
+*   **Commit:** 4bf80a7 - **Date:** 2025-11-24 - Initial project checkpoint.
+
+---
+
 ## ✨ Features
 
 - **Editable casino list** with local persistence (saved in `localStorage`)
