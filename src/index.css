@@ -1,0 +1,173 @@
+/* Base reset */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background: #111; /* match dashboard background */
+  color: #fff;
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Remove global positioning that conflicted */
+body {
+  position: relative; /* allow fixed children to work properly */
+  touch-action: none;
+  user-select: none;
+}
+
+/* Links */
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: none;
+}
+a:hover {
+  color: #535bf2;
+}
+
+/* Headings */
+h1, h2 {
+  line-height: 1.2;
+  margin: 0;
+}
+
+/* Buttons — keep neutral so Dashboard.jsx inline styles win */
+button {
+  all: unset; /* wipe global button styles */
+  cursor: pointer;
+}
+button:focus {
+  outline: none;
+}
+
+/* Dark theme for react-time-picker */
+.react-time-picker,
+.react-time-picker__wrapper {
+  background-color: #222 !important;
+  border-radius: 6px !important;
+  border: none !important;
+  color: #fff !important;
+  font-size: 0.9rem;
+}
+
+.react-time-picker__inputGroup input,
+.react-time-picker__inputGroup select {
+  background-color: #222 !important;
+  color: #fff !important;
+  border: none !important;
+  outline: none !important;
+  font-size: 0.9rem;
+  padding: 0.25rem;
+  border-radius: 6px !important;
+}
+
+.react-time-picker__inputGroup input:focus,
+.react-time-picker__inputGroup select:focus {
+  box-shadow: 0 0 0 2px #004488;
+}
+
+.react-time-picker__clear-button,
+.react-time-picker__clock-button {
+  display: none !important;
+}
+.dashboard-root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #111;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dashboard-title {
+  font-size: 1.2rem;
+  margin: 1rem auto;
+  width: 80vw;
+  max-width: 480px;
+}
+
+.casino-list {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 0 1rem 5rem; /* leave space for pinned button */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.casino-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #222;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  width: 80vw;
+  max-width: 480px;
+}
+
+.casino-input {
+  font-size: 0.9rem;
+  font-weight: bold;
+  padding: 0.25rem;
+  margin-bottom: 0.25rem;
+  width: 100%;
+  background: #222;
+  color: #fff;
+  border: none;
+  outline: none;
+  border-radius: 6px;
+}
+
+.casino-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.delete-button {
+  margin-left: 1rem;
+  background: #550000;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.add-button-container {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80vw;
+  max-width: 480px;
+}
+
+.add-button {
+  width: 100%;
+  padding: 0.75rem;
+  background: #004488;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  border-radius: 6px;
+}

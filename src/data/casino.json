@@ -1,0 +1,5 @@
+[
+  { "name": "Stake.us", "resetHourUTC": 0 },
+  { "name": "WOW Vegas", "resetIntervalHours": 24 },
+  { "name": "Chumba", "resetHourUTC": 5 }
+]
