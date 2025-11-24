@@ -1,43 +1,55 @@
+:root {
+  --background-color: #111;
+  --surface-color: #222;
+  --primary-color: #004488;
+  --primary-hover-color: #0055aa;
+  --danger-color: #550000;
+  --danger-hover-color: #aa0000;
+  --text-color: #fff;
+  --glow-primary: rgba(0, 68, 136, 0.6);
+  --glow-primary-strong: rgba(0, 85, 170, 0.9);
+  --glow-danger: rgba(255, 0, 0, 0.6);
+  --glow-danger-strong: rgba(255, 0, 0, 0.9);
+  --base-width: 80vw;
+  --max-width: 480px;
+}
+
 .dashboard-root {
-  position: fixed;   /* lock dashboard in place */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: #111;
-  color: #fff;
+  background: var(--background-color);
+  color: var(--text-color);
   display: flex;
   flex-direction: column;
 }
 
 .dashboard-title {
-  position: sticky;       /* stays at the top while scrolling */
+  position: sticky;
   top: 0;
   font-size: 1.2rem;
   margin: 0 auto;
-  width: 80vw;
-  max-width: 480px;
+  width: var(--base-width);
+  max-width: var(--max-width);
   padding: 1rem;
-  background: #111;       /* match dashboard background */
+  background: var(--background-color);
   z-index: 100;
-
-  /* Glow effect */
-  box-shadow: 0 2px 12px rgba(0, 68, 136, 0.6);
-
-  /* Animation setup */
+  box-shadow: 0 2px 12px var(--glow-primary);
   opacity: 0.85;
   transition: all 0.4s ease;
 }
 
 .dashboard-title.sticky-active {
-  opacity: 1; /* fade in */
-  box-shadow: 0 2px 20px rgba(0, 85, 170, 0.9); /* stronger glow */
+  opacity: 1;
+  box-shadow: 0 2px 20px var(--glow-primary-strong);
 }
 
 .casino-list {
   flex-grow: 1;
-  overflow-y: auto;        /* scrollable list */
-  padding: 0 1rem 6rem;    /* space for pinned button */
+  overflow-y: auto;
+  padding: 0 1rem 6rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -47,12 +59,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #222;
+  background: var(--surface-color);
   border-radius: 8px;
   padding: 1rem;
   margin-bottom: 1rem;
-  width: 80vw;
-  max-width: 480px;
+  width: var(--base-width);
+  max-width: var(--max-width);
 }
 
 .casino-input {
@@ -61,8 +73,8 @@
   padding: 0.25rem;
   margin-bottom: 0.25rem;
   width: 100%;
-  background: #222;
-  color: #fff;
+  background: var(--surface-color);
+  color: var(--text-color);
   border: none;
   outline: none;
   border-radius: 6px;
@@ -78,8 +90,8 @@
 
 .delete-button {
   margin-left: 1rem;
-  background: #550000;
-  color: #fff;
+  background: var(--danger-color);
+  color: var(--text-color);
   border: none;
   cursor: pointer;
   font-size: 1.2rem;
@@ -89,45 +101,41 @@
   border-radius: 50%;
   width: 2.5rem;
   height: 2.5rem;
-
-  /* 🔴 Red glow effect */
-  box-shadow: 0 0 12px rgba(255, 0, 0, 0.6);
+  box-shadow: 0 0 12px var(--glow-danger);
   transition: all 0.3s ease;
 }
 
 .delete-button:hover,
 .delete-button:active {
-  background: #aa0000; /* brighter red */
-  box-shadow: 0 0 20px rgba(255, 0, 0, 0.9); /* stronger glow */
+  background: var(--danger-hover-color);
+  box-shadow: 0 0 20px var(--glow-danger-strong);
 }
 
 .add-button-container {
-  position: fixed;   /* pinned to viewport bottom */
+  position: fixed;
   bottom: 1rem;
   left: 50%;
   transform: translateX(-50%);
-  width: 80vw;
-  max-width: 480px;
-  z-index: 1000;     /* keep above list */
+  width: var(--base-width);
+  max-width: var(--max-width);
+  z-index: 1000;
 }
 
 .add-button {
   width: 100%;
   padding: 0.75rem;
-  background: #004488;
-  color: #fff;
+  background: var(--primary-color);
+  color: var(--text-color);
   border: none;
   cursor: pointer;
   font-size: 1rem;
   border-radius: 6px;
-
-  /* 🔵 Blue glow effect */
-  box-shadow: 0 0 12px rgba(0, 68, 136, 0.6);
+  box-shadow: 0 0 12px var(--glow-primary);
   transition: all 0.3s ease;
 }
 
 .add-button:hover,
 .add-button:active {
-  background: #0055aa; /* brighter blue */
-  box-shadow: 0 0 20px rgba(0, 85, 170, 0.9); /* stronger glow */
+  background: var(--primary-hover-color);
+  box-shadow: 0 0 20px var(--glow-primary-strong);
 }

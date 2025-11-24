@@ -1,53 +1,37 @@
-import React, { useEffect, useState } from "react";
-
-function SimpleCountdown({ targetTime }) {
-  const [timeLeft, setTimeLeft] = useState(targetTime - Date.now());
-
-  useEffect(() => {
-    setTimeLeft(targetTime - Date.now());
-    const timer = setInterval(() => {
-      setTimeLeft(targetTime - Date.now());
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [targetTime]);
-
-  if (timeLeft <= 0) return <span>Bonus ready!</span>;
-
-  const hours = Math.floor(timeLeft / (1000 * 60 * 60));
-  const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
-  const seconds = Math.floor((timeLeft / 1000) % 60);
-
-  return (
-    <span>
-      {hours}h {minutes}m {seconds}s
-    </span>
-  );
-}
+import React, { useState, useEffect } from "react";
 
 function CasinoTimer({ casino }) {
-  let resetTime = null;
+  const [timeLeft, setTimeLeft] = useState("No reset time set");
 
-  if (casino.resetTime && casino.resetTime.includes(":")) {
-    const [hours, minutes] = casino.resetTime.split(":").map(Number);
-    const now = new Date();
-    const target = new Date();
-    target.setHours(hours, minutes, 0, 0);
-    if (target <= now) {
-      target.setDate(target.getDate() + 1);
+  useEffect(() => {
+    if (casino.resetTime && casino.resetTime.includes(":")) {
+      const [hours, minutes] = casino.resetTime.split(":").map(Number);
+      const now = new Date();
+      const target = new Date();
+      target.setHours(hours, minutes, 0, 0);
+      if (target <= now) {
+        target.setDate(target.getDate() + 1);
+      }
+
+      const updateTimer = () => {
+        const remaining = target.getTime() - Date.now();
+        if (remaining <= 0) {
+          setTimeLeft("Bonus Ready!");
+        } else {
+          const h = Math.floor(remaining / (1000 * 60 * 60));
+          const m = Math.floor((remaining / (1000 * 60)) % 60);
+          const s = Math.floor((remaining / 1000) % 60);
+          setTimeLeft(`${h}h ${m}m ${s}s`);
+        }
+      };
+
+      updateTimer();
+      const timer = setInterval(updateTimer, 1000);
+      return () => clearInterval(timer);
     }
-    resetTime = target.getTime();
-  }
+  }, [casino.resetTime]);
 
-  return (
-    <div>
-      <h3>{casino.name}</h3>
-      {resetTime ? (
-        <SimpleCountdown targetTime={resetTime} />
-      ) : (
-        <p>No reset time set</p>
-      )}
-    </div>
-  );
+  return <span className="countdown-box">{timeLeft}</span>;
 }
 
 export default CasinoTimer;
