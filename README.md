@@ -1,16 +1,105 @@
-# React + Vite
+# 🎰 Casino Bonus Tracker Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A sleek React dashboard for tracking daily social casino bonus resets.  
+Designed with a **dark theme**, **glowing interactive buttons**, and a **sticky header** for a polished mobile‑first experience.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## React Compiler
+- **Editable casino list** with local persistence (saved in `localStorage`)
+- **Daily reset countdowns** using styled pill‑shaped timers
+- **Add/Delete casinos** with glowing blue/red buttons
+- **Sticky glowing header** that stays visible while scrolling
+- **Mobile‑optimized layout** (blocks at 80% width, capped at 480px)
+- **Modular CSS** (`Dashboard.css`) for clean component‑scoped styling
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 📸 Screenshots
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+*(Add screenshots here once you deploy or capture them)*
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js (v18+ recommended)
+- npm or yarn
+
+### Installation
+```bash
+# Clone the repo
+git clone https://github.com/tahp/casinobonustracker.git
+
+# Enter project directory
+cd casinobonustracker
+
+# Install dependencies
+npm install
+```
+
+### Run locally
+```bash
+npm start
+```
+
+The app will be available at `http://localhost:3000`.
+
+---
+
+## 🛠 Project Structure
+
+```
+src/
+  components/
+    Dashboard.jsx   # Main dashboard component
+    Dashboard.css   # Component-scoped styles
+  index.js          # App entry point
+  index.css         # Global styles
+```
+
+---
+
+## 🎨 Design Notes
+
+- **Dark theme** for readability and focus
+- **Glowing shadows** for interactive feedback:
+  - Blue glow → Add Casino button
+  - Red glow → Delete button
+  - Sticky header glow intensifies when scrolled
+- **Responsive layout** optimized for portrait and landscape
+
+---
+
+## 📦 Deployment
+
+You can deploy easily with [GitHub Pages](https://pages.github.com/) or [Vercel](https://vercel.com/):
+
+```bash
+npm run build
+```
+
+Then upload the `build/` folder to your hosting provider.
+
+---
+
+## 📜 License
+
+MIT License — feel free to use, modify, and share.
+
+---
+
+## 🤝 Contributing
+
+Pull requests are welcome!  
+For major changes, please open an issue first to discuss what you’d like to change.
+
+---
+
+## 🙌 Acknowledgements
+
+- Built with React
+- Styled with modular CSS
+- Inspired by the need for **frictionless daily bonus tracking**
