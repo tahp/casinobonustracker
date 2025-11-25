@@ -17,7 +17,7 @@ function CasinoTimer({ casino, onClaim }) {
         target.setDate(target.getDate() + 1);
       }
     } else if (casino.resetTime && casino.resetTime.includes(":")) {
-      // Fallback: daily reset time string
+      // Daily reset time string
       const [hours, minutes] = casino.resetTime.split(":").map(Number);
       target = new Date();
       target.setHours(hours, minutes, 0, 0);
@@ -36,7 +36,7 @@ function CasinoTimer({ casino, onClaim }) {
       if (remaining <= 0) {
         setTimeLeft("Bonus Ready!");
         if (!casino.bonusReady) {
-          onClaim(casino.id, true);
+          onClaim(casino.id, true); // persist ready state
         }
       } else {
         const h = Math.floor(remaining / (1000 * 60 * 60));
@@ -56,7 +56,7 @@ function CasinoTimer({ casino, onClaim }) {
       className={`countdown-box ${timeLeft === "Bonus Ready!" ? "ready" : ""}`}
       onClick={() => {
         if (timeLeft === "Bonus Ready!") {
-          onClaim(casino.id, false); // mark claimed
+          onClaim(casino.id, false); // reset countdown for this card only
           if (casino.url) {
             window.open(casino.url, "_blank");
           }

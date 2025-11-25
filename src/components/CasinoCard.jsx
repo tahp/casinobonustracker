@@ -25,7 +25,7 @@ function CasinoCard({ casino, onUpdate, onRemove, onClaim }) {
             clockIcon={null}
           />
 
-          {/* Countdown timer with claim logic */}
+          {/* Countdown timer with per-card claim logic */}
           <CasinoTimer casino={casino} onClaim={onClaim} />
         </div>
       </div>
