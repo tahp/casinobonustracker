@@ -10,13 +10,35 @@ function Dashboard() {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        const withIds = parsed.map((c) => ({ ...c, id: c.id || crypto.randomUUID() }));
+        const withIds = parsed.map((c) => ({
+          ...c,
+          id: c.id || crypto.randomUUID(),
+          resetTime: c.resetTime || "",
+          bonusReady: c.bonusReady || false,
+          lastClaimed: c.lastClaimed || null,
+        }));
         return sortCasinos(withIds);
       } catch {
-        return sortCasinos(initialCasinos.map(c => ({ ...c, id: crypto.randomUUID(), resetTime: "" })));
+        return sortCasinos(
+          initialCasinos.map((c) => ({
+            ...c,
+            id: crypto.randomUUID(),
+            resetTime: "",
+            bonusReady: false,
+            lastClaimed: null,
+          }))
+        );
       }
     }
-    return sortCasinos(initialCasinos.map(c => ({ ...c, id: crypto.randomUUID(), resetTime: "" })));
+    return sortCasinos(
+      initialCasinos.map((c) => ({
+        ...c,
+        id: crypto.randomUUID(),
+        resetTime: "",
+        bonusReady: false,
+        lastClaimed: null,
+      }))
+    );
   });
 
   useEffect(() => {
@@ -42,7 +64,13 @@ function Dashboard() {
   const addCasino = () => {
     const updated = [
       ...casinos,
-      { id: crypto.randomUUID(), name: "New Casino", resetTime: "" }
+      {
+        id: crypto.randomUUID(),
+        name: "New Casino",
+        resetTime: "",
+        bonusReady: false,
+        lastClaimed: null,
+      },
     ];
     setCasinos(sortCasinos(updated));
   };
@@ -50,6 +78,20 @@ function Dashboard() {
   const removeCasino = (id) => {
     const updated = casinos.filter((c) => c.id !== id);
     setCasinos(sortCasinos(updated));
+  };
+
+  // NEW: handle claim logic
+  const handleClaim = (id, markReadyOnly = false) => {
+    const updated = casinos.map((c) =>
+      c.id === id
+        ? {
+            ...c,
+            bonusReady: markReadyOnly ? true : false,
+            lastClaimed: markReadyOnly ? c.lastClaimed : Date.now(),
+          }
+        : c
+    );
+    setCasinos(updated);
   };
 
   return (
@@ -63,6 +105,7 @@ function Dashboard() {
             casino={casino}
             onUpdate={handleChange}
             onRemove={removeCasino}
+            onClaim={handleClaim}
           />
         ))}
       </div>

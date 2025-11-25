@@ -2,17 +2,20 @@ import React from "react";
 import TimePicker from "react-time-picker";
 import CasinoTimer from "./CasinoTimer";
 
-function CasinoCard({ casino, onUpdate, onRemove }) {
+function CasinoCard({ casino, onUpdate, onRemove, onClaim }) {
   return (
     <div className="casino-card">
       <div className="casino-content">
+        {/* Editable casino name */}
         <input
           type="text"
           value={casino.name}
           onChange={(e) => onUpdate(casino.id, "name", e.target.value)}
           className="casino-input"
         />
+
         <div className="casino-row">
+          {/* Editable reset time */}
           <TimePicker
             value={casino.resetTime || ""}
             onChange={(value) => onUpdate(casino.id, "resetTime", value)}
@@ -21,9 +24,13 @@ function CasinoCard({ casino, onUpdate, onRemove }) {
             format="h:mm a"
             clockIcon={null}
           />
-          <CasinoTimer casino={casino} />
+
+          {/* Countdown timer with claim logic */}
+          <CasinoTimer casino={casino} onClaim={onClaim} />
         </div>
       </div>
+
+      {/* Delete button */}
       <button
         onClick={() => onRemove(casino.id)}
         className="delete-button"
