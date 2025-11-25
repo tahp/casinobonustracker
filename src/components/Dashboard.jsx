@@ -41,10 +41,12 @@ function Dashboard() {
     );
   });
 
+  // Persist casinos to localStorage
   useEffect(() => {
     localStorage.setItem("casinos", JSON.stringify(casinos));
   }, [casinos]);
 
+  // Debounced sorting
   const debouncedSort = useMemo(
     () =>
       debounce((updated) => {
@@ -53,6 +55,7 @@ function Dashboard() {
     [setCasinos]
   );
 
+  // Handle inline edits
   const handleChange = (id, field, value) => {
     const updated = casinos.map((c) =>
       c.id === id ? { ...c, [field]: value } : c
@@ -61,6 +64,7 @@ function Dashboard() {
     debouncedSort(updated);
   };
 
+  // Add new casino
   const addCasino = () => {
     const updated = [
       ...casinos,
@@ -75,12 +79,13 @@ function Dashboard() {
     setCasinos(sortCasinos(updated));
   };
 
+  // Remove casino
   const removeCasino = (id) => {
     const updated = casinos.filter((c) => c.id !== id);
     setCasinos(sortCasinos(updated));
   };
 
-  // NEW: handle claim logic
+  // Handle claim (bonus ready clicked)
   const handleClaim = (id, markReadyOnly = false) => {
     const updated = casinos.map((c) =>
       c.id === id
@@ -91,7 +96,7 @@ function Dashboard() {
           }
         : c
     );
-    setCasinos(updated);
+    setCasinos(sortCasinos(updated));
   };
 
   return (

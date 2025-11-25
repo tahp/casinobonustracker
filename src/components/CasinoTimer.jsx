@@ -6,21 +6,23 @@ function CasinoTimer({ casino, onClaim }) {
   useEffect(() => {
     let target;
 
-    if (casino.lastClaimed) {
-      // Next reset is 24h after last claim
-      target = new Date(casino.lastClaimed + 24 * 60 * 60 * 1000);
+    if (casino.lastClaimed && casino.resetTime) {
+      // Compute next reset based on picker time
+      const [hours, minutes] = casino.resetTime.split(":").map(Number);
+      target = new Date(casino.lastClaimed);
+      target.setHours(hours, minutes, 0, 0);
+
+      // If that reset time is already past relative to lastClaimed, roll to next day
+      if (target <= new Date(casino.lastClaimed)) {
+        target.setDate(target.getDate() + 1);
+      }
     } else if (casino.resetTime && casino.resetTime.includes(":")) {
-      // Daily reset time string
+      // Fallback: daily reset time string
       const [hours, minutes] = casino.resetTime.split(":").map(Number);
       target = new Date();
       target.setHours(hours, minutes, 0, 0);
-      // If that time has already passed today, just mark ready
       if (target <= new Date()) {
-        setTimeLeft("Bonus Ready!");
-        if (!casino.bonusReady) {
-          onClaim(casino.id, true); // persist ready state
-        }
-        return;
+        target.setDate(target.getDate() + 1);
       }
     }
 
@@ -54,7 +56,7 @@ function CasinoTimer({ casino, onClaim }) {
       className={`countdown-box ${timeLeft === "Bonus Ready!" ? "ready" : ""}`}
       onClick={() => {
         if (timeLeft === "Bonus Ready!") {
-          onClaim(casino.id, false); // reset countdown
+          onClaim(casino.id, false); // mark claimed
           if (casino.url) {
             window.open(casino.url, "_blank");
           }
