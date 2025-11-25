@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import CasinoCard from "./CasinoCard";
-import { debounce, sortCasinos } from "../utils";
+import { sortCasinos } from "../utils";
 import initialCasinos from "../data/casino.json";
 import "./Dashboard.css";
 
@@ -10,61 +10,48 @@ function Dashboard() {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        const withIds = parsed.map((c) => ({
+        return parsed.map((c) => ({
           ...c,
           id: c.id || crypto.randomUUID(),
           resetTime: c.resetTime || "",
           bonusReady: c.bonusReady || false,
           lastClaimed: c.lastClaimed || null,
         }));
-        return sortCasinos(withIds);
       } catch {
-        return sortCasinos(
-          initialCasinos.map((c) => ({
-            ...c,
-            id: crypto.randomUUID(),
-            resetTime: "",
-            bonusReady: false,
-            lastClaimed: null,
-          }))
-        );
+        return initialCasinos.map((c) => ({
+          ...c,
+          id: crypto.randomUUID(),
+          resetTime: "",
+          bonusReady: false,
+          lastClaimed: null,
+        }));
       }
     }
-    return sortCasinos(
-      initialCasinos.map((c) => ({
-        ...c,
-        id: crypto.randomUUID(),
-        resetTime: "",
-        bonusReady: false,
-        lastClaimed: null,
-      }))
-    );
+    return initialCasinos.map((c) => ({
+      ...c,
+      id: crypto.randomUUID(),
+      resetTime: "",
+      bonusReady: false,
+      lastClaimed: null,
+    }));
   });
 
-  // Persist casinos to localStorage
+  const [sortMode, setSortMode] = useState("timeLeft");
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Persist casinos
   useEffect(() => {
     localStorage.setItem("casinos", JSON.stringify(casinos));
   }, [casinos]);
 
-  // Debounced sorting
-  const debouncedSort = useMemo(
-    () =>
-      debounce((updated) => {
-        setCasinos(sortCasinos(updated));
-      }, 500),
-    [setCasinos]
-  );
-
-  // Handle inline edits
   const handleChange = (id, field, value) => {
     const updated = casinos.map((c) =>
       c.id === id ? { ...c, [field]: value } : c
     );
     setCasinos(updated);
-    debouncedSort(updated);
+    // No sorting here — let render handle it
   };
 
-  // Add new casino
   const addCasino = () => {
     const updated = [
       ...casinos,
@@ -76,16 +63,14 @@ function Dashboard() {
         lastClaimed: null,
       },
     ];
-    setCasinos(sortCasinos(updated));
+    setCasinos(updated);
   };
 
-  // Remove casino
   const removeCasino = (id) => {
     const updated = casinos.filter((c) => c.id !== id);
-    setCasinos(sortCasinos(updated));
+    setCasinos(updated);
   };
 
-  // Handle claim (bonus ready clicked)
   const handleClaim = (id, markReadyOnly = false) => {
     const updated = casinos.map((c) =>
       c.id === id
@@ -96,15 +81,60 @@ function Dashboard() {
           }
         : c
     );
-    setCasinos(sortCasinos(updated));
+    setCasinos(updated);
   };
+
+  const sortedCasinos = useMemo(
+    () => sortCasinos(casinos, sortMode),
+    [casinos, sortMode]
+  );
 
   return (
     <div className="dashboard-root">
-      <h2 className="dashboard-title">🎰 Daily Bonus Dashboard</h2>
+      <div className="dashboard-header">
+        <h2 className="dashboard-title">🎰 Daily Bonus Dashboard</h2>
+
+        {/* Hamburger menu */}
+        <div className="hamburger-container">
+          <button
+            className="hamburger-icon"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            ☰
+          </button>
+          {menuOpen && (
+            <div className="hamburger-dropdown">
+              <button
+                onClick={() => {
+                  setSortMode("timeLeft");
+                  setMenuOpen(false);
+                }}
+              >
+                ⏳ Sort by Time Left
+              </button>
+              <button
+                onClick={() => {
+                  setSortMode("resetTime");
+                  setMenuOpen(false);
+                }}
+              >
+                🕒 Sort by Reset Time
+              </button>
+              <button
+                onClick={() => {
+                  setSortMode("alpha");
+                  setMenuOpen(false);
+                }}
+              >
+                🔤 Sort Alphabetically
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
 
       <div className="casino-list">
-        {casinos.map((casino) => (
+        {sortedCasinos.map((casino) => (
           <CasinoCard
             key={casino.id}
             casino={casino}

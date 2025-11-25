@@ -1,49 +1,42 @@
-// utils/sortCasinos.js
-
-/**
- * Compute the next reset timestamp for a given casino card.
- * - If lastClaimed exists, base the next reset off that timestamp + picker time.
- * - Otherwise, use today's picker time (roll forward if already passed).
- */
 function getNextReset(casino) {
-  if (!casino.resetTime) return Infinity;
-
+  if (!casino.resetTime) return null;
   const [hours, minutes] = casino.resetTime.split(":").map(Number);
-  let target;
-
-  if (casino.lastClaimed) {
-    target = new Date(casino.lastClaimed);
-    target.setHours(hours, minutes, 0, 0);
-
-    // If the reset time has already passed relative to lastClaimed, roll forward
-    if (target <= new Date(casino.lastClaimed)) {
-      target.setDate(target.getDate() + 1);
-    }
-  } else {
-    target = new Date();
-    target.setHours(hours, minutes, 0, 0);
-
-    // If reset time already passed today, roll forward to tomorrow
-    if (target <= new Date()) {
-      target.setDate(target.getDate() + 1);
-    }
+  let target = casino.lastClaimed ? new Date(casino.lastClaimed) : new Date();
+  target.setHours(hours, minutes, 0, 0);
+  if (target <= (casino.lastClaimed ? new Date(casino.lastClaimed) : new Date())) {
+    target.setDate(target.getDate() + 1);
   }
-
-  return target.getTime();
+  return target;
 }
 
-/**
- * Sort casinos by next reset time (soonest first).
- * If two casinos have the same reset time, sort alphabetically by name.
- */
-export function sortCasinos(casinos) {
-  return [...casinos].sort((a, b) => {
-    const aReset = getNextReset(a);
-    const bReset = getNextReset(b);
+export function sortCasinos(casinos, mode = "timeLeft") {
+  const now = Date.now();
 
-    if (aReset === bReset) {
-      return a.name.localeCompare(b.name);
-    }
-    return aReset - bReset;
-  });
+  return casinos
+    .map((c, index) => ({ ...c, _index: index })) // tag with original index
+    .sort((a, b) => {
+      const aTarget = getNextReset(a);
+      const bTarget = getNextReset(b);
+
+      const aLeft = aTarget ? aTarget.getTime() - now : Infinity;
+      const bLeft = bTarget ? bTarget.getTime() - now : Infinity;
+
+      if (mode === "timeLeft") {
+        if (aLeft !== bLeft) return aLeft - bLeft;
+        return a._index - b._index; // preserve original order
+      }
+      if (mode === "resetTime") {
+        const aReset = aTarget?.getTime() || Infinity;
+        const bReset = bTarget?.getTime() || Infinity;
+        if (aReset !== bReset) return aReset - bReset;
+        return a._index - b._index; // preserve original order
+      }
+      if (mode === "alpha") {
+        const nameCompare = a.name.localeCompare(b.name);
+        if (nameCompare !== 0) return nameCompare;
+        return a._index - b._index; // preserve original order
+      }
+      return aLeft - bLeft;
+    })
+    .map(({ _index, ...c }) => c); // strip helper index
 }
