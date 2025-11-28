@@ -2,7 +2,14 @@ import React from "react";
 import TimePicker from "react-time-picker";
 import CasinoTimer from "./CasinoTimer";
 
-function CasinoCard({ casino, onUpdate, onRemove, onClaim }) {
+function CasinoCard({
+  casino,
+  onUpdate,
+  onRemove,
+  onClaim,
+  onPauseSorting,
+  onResumeSorting,
+}) {
   return (
     <div className="casino-card">
       <div className="casino-content">
@@ -11,6 +18,8 @@ function CasinoCard({ casino, onUpdate, onRemove, onClaim }) {
           type="text"
           value={casino.name}
           onChange={(e) => onUpdate(casino.id, "name", e.target.value)}
+          onFocus={onPauseSorting}
+          onBlur={onResumeSorting}
           className="casino-input"
         />
 

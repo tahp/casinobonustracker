@@ -1,8 +1,14 @@
 import React, { useState, useEffect, useMemo } from "react";
 import CasinoCard from "./CasinoCard";
-import { sortCasinos } from "../utils";
+import { sortCasinos } from "../utils/sortCasinos";
 import initialCasinos from "../data/casino.json";
 import "./Dashboard.css";
+
+const sortConfig = [
+  { mode: "timeLeft", label: "⏳ Sort by Time Left" },
+  { mode: "resetTime", label: "🕒 Sort by Reset Time" },
+  { mode: "alpha", label: "🔤 Sort Alphabetically" },
+];
 
 function Dashboard() {
   const [casinos, setCasinos] = useState(() => {
@@ -38,8 +44,11 @@ function Dashboard() {
 
   const [sortMode, setSortMode] = useState("timeLeft");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isSortingPaused, setIsSortingPaused] = useState(false);
 
-  // Persist casinos
+  const pauseSorting = () => setIsSortingPaused(true);
+  const resumeSorting = () => setIsSortingPaused(false);
+
   useEffect(() => {
     localStorage.setItem("casinos", JSON.stringify(casinos));
   }, [casinos]);
@@ -49,85 +58,70 @@ function Dashboard() {
       c.id === id ? { ...c, [field]: value } : c
     );
     setCasinos(updated);
-    // No sorting here — let render handle it
   };
 
   const addCasino = () => {
-    const updated = [
-      ...casinos,
-      {
-        id: crypto.randomUUID(),
-        name: "New Casino",
-        resetTime: "",
-        bonusReady: false,
-        lastClaimed: null,
-      },
-    ];
-    setCasinos(updated);
+    const newCasino = {
+      id: crypto.randomUUID(),
+      name: "New Casino",
+      resetTime: "",
+      bonusReady: false,
+      lastClaimed: null,
+    };
+    setCasinos((prev) => [...prev, newCasino]);
   };
 
   const removeCasino = (id) => {
-    const updated = casinos.filter((c) => c.id !== id);
-    setCasinos(updated);
+    setCasinos((prev) => prev.filter((c) => c.id !== id));
   };
 
   const handleClaim = (id, markReadyOnly = false) => {
+    const now = Date.now();
     const updated = casinos.map((c) =>
       c.id === id
         ? {
             ...c,
             bonusReady: markReadyOnly ? true : false,
-            lastClaimed: markReadyOnly ? c.lastClaimed : Date.now(),
+            lastClaimed: markReadyOnly ? c.lastClaimed : now,
           }
         : c
     );
     setCasinos(updated);
   };
 
-  const sortedCasinos = useMemo(
-    () => sortCasinos(casinos, sortMode),
-    [casinos, sortMode]
-  );
+  const sortedCasinos = useMemo(() => {
+    if (isSortingPaused) {
+      return casinos;
+    }
+    return sortCasinos(casinos, sortMode);
+  }, [casinos, sortMode, isSortingPaused]);
 
   return (
     <div className="dashboard-root">
       <div className="dashboard-header">
         <h2 className="dashboard-title">🎰 Daily Bonus Dashboard</h2>
 
-        {/* Hamburger menu */}
         <div className="hamburger-container">
           <button
             className="hamburger-icon"
             onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Sort options"
           >
             ☰
           </button>
           {menuOpen && (
             <div className="hamburger-dropdown">
-              <button
-                onClick={() => {
-                  setSortMode("timeLeft");
-                  setMenuOpen(false);
-                }}
-              >
-                ⏳ Sort by Time Left
-              </button>
-              <button
-                onClick={() => {
-                  setSortMode("resetTime");
-                  setMenuOpen(false);
-                }}
-              >
-                🕒 Sort by Reset Time
-              </button>
-              <button
-                onClick={() => {
-                  setSortMode("alpha");
-                  setMenuOpen(false);
-                }}
-              >
-                🔤 Sort Alphabetically
-              </button>
+              {sortConfig.map(({ mode, label }) => (
+                <button
+                  key={mode}
+                  onClick={() => {
+                    setSortMode(mode);
+                    setMenuOpen(false);
+                  }}
+                >
+                  {label}
+                </button>
+              ))}
             </div>
           )}
         </div>
@@ -141,6 +135,8 @@ function Dashboard() {
             onUpdate={handleChange}
             onRemove={removeCasino}
             onClaim={handleClaim}
+            onPauseSorting={pauseSorting}
+            onResumeSorting={resumeSorting}
           />
         ))}
       </div>
