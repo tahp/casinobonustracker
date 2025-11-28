@@ -59,6 +59,11 @@
   color: var(--text-color);
   font-size: 1.5rem;
   cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.hamburger-icon:hover {
+  transform: scale(1.1);
 }
 
 .hamburger-dropdown {
@@ -72,6 +77,7 @@
   flex-direction: column;
   gap: 0.5rem;
   box-shadow: 0 2px 12px var(--glow-primary);
+  animation: fadeIn 0.2s ease-out;
 }
 
 .hamburger-dropdown button {
@@ -81,11 +87,12 @@
   padding: 0.5rem 1rem;
   border-radius: 4px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .hamburger-dropdown button:hover {
   background: var(--primary-hover-color);
+  transform: translateX(5px);
 }
 
 .casino-list {
@@ -107,6 +114,8 @@
   margin-bottom: 1rem;
   width: var(--base-width);
   max-width: var(--max-width);
+  animation: fadeInSlideUp 0.5s ease-out forwards;
+  opacity: 0; /* Start invisible for animation */
 }
 
 .casino-input {
@@ -144,13 +153,14 @@
   width: 2.5rem;
   height: 2.5rem;
   box-shadow: 0 0 12px var(--glow-danger);
-  transition: all 0.3s ease;
+  transition: all 0.3s ease, transform 0.2s ease;
 }
 
 .delete-button:hover,
 .delete-button:active {
   background: var(--danger-hover-color);
   box-shadow: 0 0 20px var(--glow-danger-strong);
+  transform: scale(1.1);
 }
 
 .add-button-container {
@@ -173,11 +183,32 @@
   font-size: 1rem;
   border-radius: 6px;
   box-shadow: 0 0 12px var(--glow-primary);
-  transition: all 0.3s ease;
+  transition: all 0.3s ease, transform 0.2s ease;
 }
 
 .add-button:hover,
 .add-button:active {
   background: var(--primary-hover-color);
   box-shadow: 0 0 20px var(--glow-primary-strong);
+  transform: translateY(-3px);
+}
+
+@keyframes fadeInSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
