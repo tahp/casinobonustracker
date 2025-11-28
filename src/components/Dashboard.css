@@ -118,6 +118,11 @@
   opacity: 0; /* Start invisible for animation */
 }
 
+.casino-name {
+  font-family: 'Arial Black', sans-serif;
+  font-size: 20px;
+}
+
 .casino-input {
   font-size: 0.9rem;
   font-weight: bold;
@@ -166,31 +171,48 @@
 .add-button-container {
   position: fixed;
   bottom: 1rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: var(--base-width);
-  max-width: var(--max-width);
+  right: 1rem; /* Position to the right */
+  left: auto; /* Override previous left positioning */
   z-index: 1000;
 }
 
 .add-button {
-  width: 100%;
-  padding: 0.75rem;
+  width: 50px; /* Make it square */
+  height: 50px; /* Make it square */
+  padding: 0; /* Remove padding for square shape */
   background: var(--primary-color);
   color: var(--text-color);
   border: none;
   cursor: pointer;
-  font-size: 1rem;
-  border-radius: 6px;
+  font-size: 2rem; /* Adjust font size for '+' */
+  border-radius: 50%; /* Make it circular */
   box-shadow: 0 0 12px var(--glow-primary);
   transition: all 0.3s ease, transform 0.2s ease;
+  display: flex; /* Use flex to center the '+' */
+  justify-content: center;
+  align-items: center;
 }
 
 .add-button:hover,
 .add-button:active {
   background: var(--primary-hover-color);
   box-shadow: 0 0 20px var(--glow-primary-strong);
-  transform: translateY(-3px);
+  transform: scale(1.1); /* Scale effect for floating button */
+}
+
+.casino-card.highlight {
+  animation: highlightFade 1.5s ease-out forwards;
+}
+
+@keyframes highlightFade {
+  0% {
+    box-shadow: 0 0 20px 5px var(--glow-primary-strong);
+    background-color: rgba(0, 68, 136, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 12px var(--glow-primary);
+    background-color: var(--surface-color);
+  }
 }
 
 @keyframes fadeInSlideUp {
