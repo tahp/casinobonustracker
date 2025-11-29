@@ -22,8 +22,8 @@ Designed with a **dark theme**, **glowing interactive buttons**, and a **sticky 
 
 ---
 
-## 📸 Screenshots
-Screenshot_20251128_194236_Chrome.jpg
+## screens
+![Screenshot](https://github.com/tahp/casinobonustracker/blob/3d3fb437b6c6c354b5af9a1dbb6dbbdb2185abb3/Screenshot_20251128_194240_Chrome.jpg?raw=true)
 
 ---
 
