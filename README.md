@@ -23,8 +23,7 @@ Designed with a **dark theme**, **glowing interactive buttons**, and a **sticky 
 ---
 
 ## 📸 Screenshots
-
-*(Add screenshots here once you deploy or capture them)*
+Screenshot_20251128_194236_Chrome.jpg
 
 ---
 
