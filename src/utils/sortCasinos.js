@@ -6,5 +6,5 @@ export function sortCasinos(casinos, mode = "timeLeft") {
   return casinos
     .map((c, index) => ({ ...c, _index: index })) // Tag with original index
     .sort(sortFn)
-    .map(({ _index, ...c }) => c); // Strip helper index
+    .map(({ _, ...c }) => c); // Strip helper index
 }

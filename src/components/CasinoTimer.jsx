@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 
 function CasinoTimer({ casino, onClaim }) {
-  const [timeLeft, setTimeLeft] = useState("");
+  const [timeLeft, setTimeLeft] = useState("No reset time set"); // Initialize with default message
 
   useEffect(() => {
     let target;
 
+    // ... (rest of your target calculation logic)
     if (casino.lastClaimed && casino.resetTime) {
       // Compute next reset based on picker time
       const [hours, minutes] = casino.resetTime.split(":").map(Number);
@@ -26,8 +27,8 @@ function CasinoTimer({ casino, onClaim }) {
       }
     }
 
+
     if (!target) {
-      setTimeLeft("No reset time set");
       return;
     }
 
@@ -49,7 +50,7 @@ function CasinoTimer({ casino, onClaim }) {
     updateTimer();
     const timer = setInterval(updateTimer, 1000);
     return () => clearInterval(timer);
-  }, [casino.resetTime, casino.lastClaimed, casino.bonusReady]);
+  }, [casino.resetTime, casino.lastClaimed, casino.bonusReady, casino.id, onClaim]); // Added casino.id and onClaim to dependencies
 
   return (
     <span

@@ -1,50 +1,27 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import CasinoCard from "./CasinoCard";
 import { sortCasinos } from "../utils/sortCasinos";
-import initialCasinos from "../data/casino.json";
+import getInitialCasinos from '../utils/getInitialCasinos';
 import "./Dashboard.css";
 
 const sortConfig = [
-  { mode: "timeLeft", label: "⏳ Sort by Time Left" },
-  { mode: "resetTime", label: "🕒 Sort by Reset Time" },
-  { mode: "alpha", label: "🔤 Sort Alphabetically" },
+  { mode: "timeLeft", label: "⏳ Time Left" },
+  { mode: "resetTime", label: "🕒 Next Reset" },
+  { mode: "alphabetical", label: "🔤 Alphabetical" },
+  { mode: "newlyAdded", label: "✨ Newly Added" },
+
 ];
 
 function Dashboard() {
-  const [casinos, setCasinos] = useState(() => {
-    const saved = localStorage.getItem("casinos");
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        return parsed.map((c) => ({
-          ...c,
-          id: c.id || crypto.randomUUID(),
-          resetTime: c.resetTime || "",
-          bonusReady: c.bonusReady || false,
-          lastClaimed: c.lastClaimed || null,
-        }));
-      } catch {
-        return initialCasinos.map((c) => ({
-          ...c,
-          id: crypto.randomUUID(),
-          resetTime: "",
-          bonusReady: false,
-          lastClaimed: null,
-        }));
-      }
-    }
-    return initialCasinos.map((c) => ({
-      ...c,
-      id: crypto.randomUUID(),
-      resetTime: "",
-      bonusReady: false,
-      lastClaimed: null,
-    }));
-  });
+  const [casinos, setCasinos] = useState(getInitialCasinos);
 
-  const [sortMode, setSortMode] = useState("timeLeft");
+  const [sortMode, setSortMode] = useState("newlyAdded"); // Default to newly added
   const [menuOpen, setMenuOpen] = useState(false);
   const [isSortingPaused, setIsSortingPaused] = useState(false);
+  const [editingCasinoId, setEditingCasinoId] = useState(null); // State to track the casino being edited
+
+  const casinoListRef = useRef(null);
+  const casinoCardRefs = useRef({});
 
   const pauseSorting = () => setIsSortingPaused(true);
   const resumeSorting = () => setIsSortingPaused(false);
@@ -52,6 +29,24 @@ function Dashboard() {
   useEffect(() => {
     localStorage.setItem("casinos", JSON.stringify(casinos));
   }, [casinos]);
+
+  useEffect(() => {
+    if (editingCasinoId) {
+      const timer = setTimeout(() => {
+        const newCardElement = casinoCardRefs.current[editingCasinoId];
+        if (newCardElement) {
+          newCardElement.scrollIntoView({ behavior: "smooth", block: "center" });
+          newCardElement.classList.add("highlight");
+          const highlightTimer = setTimeout(() => {
+            newCardElement.classList.remove("highlight");
+            setEditingCasinoId(null); // Clear the ID after use, only after highlight is removed
+          }, 1500);
+          return () => clearTimeout(highlightTimer);
+        }
+      }, 100); // Small delay to ensure DOM update
+      return () => clearTimeout(timer); // Clear the initial timer if component unmounts early
+    }
+  }, [editingCasinoId]); // Only depend on editingCasinoId
 
   const handleChange = (id, field, value) => {
     const updated = casinos.map((c) =>
@@ -67,8 +62,10 @@ function Dashboard() {
       resetTime: "",
       bonusReady: false,
       lastClaimed: null,
+      dateAdded: Date.now(), // New casinos are added with current timestamp
     };
-    setCasinos((prev) => [...prev, newCasino]);
+    setCasinos((prev) => [newCasino, ...prev]);
+    setEditingCasinoId(newCasino.id); // Set the new casino for editing
   };
 
   const removeCasino = (id) => {
@@ -122,12 +119,20 @@ function Dashboard() {
                   {label}
                 </button>
               ))}
+              <button
+                onClick={() => {
+                  addCasino();
+                  setMenuOpen(false);
+                }}
+              >
+                ➕ Add Casino
+              </button>
             </div>
           )}
         </div>
       </div>
 
-      <div className="casino-list">
+      <div className="casino-list" ref={casinoListRef}>
         {sortedCasinos.map((casino) => (
           <CasinoCard
             key={casino.id}
@@ -137,14 +142,9 @@ function Dashboard() {
             onClaim={handleClaim}
             onPauseSorting={pauseSorting}
             onResumeSorting={resumeSorting}
+            ref={(el) => (casinoCardRefs.current[casino.id] = el)}
           />
         ))}
-      </div>
-
-      <div className="add-button-container">
-        <button onClick={addCasino} className="add-button">
-          + Add Casino
-        </button>
       </div>
     </div>
   );
