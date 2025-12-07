@@ -7,7 +7,7 @@ import "./Dashboard.css";
 const sortConfig = [
   { mode: "timeLeft", label: "⏳ Time Left" },
   { mode: "resetTime", label: "🕒 Next Reset" },
-  { mode: "alphabetical", label: "🔤 Alphabetical" },
+  { mode: "alpha", label: "🔤 Alphabetical" },
   { mode: "newlyAdded", label: "✨ Newly Added" },
 
 ];

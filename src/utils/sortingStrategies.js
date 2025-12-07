@@ -36,8 +36,16 @@ const alpha = (a, b) => {
   return a._index - b._index;
 };
 
+const newlyAdded = (a, b) => {
+  const dateA = a.dateAdded || 0;
+  const dateB = b.dateAdded || 0;
+  if (dateB !== dateA) return dateB - dateA;
+  return a._index - b._index;
+};
+
 export const sortingStrategies = {
   timeLeft,
   resetTime,
   alpha,
+  newlyAdded,
 };
