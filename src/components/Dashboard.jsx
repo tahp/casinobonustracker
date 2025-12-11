@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import CasinoCard from "./CasinoCard";
 import { sortCasinos } from "../utils/sortCasinos";
-import getInitialCasinos from '../utils/getInitialCasinos';
+import getInitialCasinos from '../utils/getInitialCasinos.js';
 import "./Dashboard.css";
 
 const sortConfig = [
