@@ -6,7 +6,7 @@ html, body {
   width: 100%;
   background: #111; /* match dashboard background */
   color: #fff;
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Inter', sans-serif;
   line-height: 1.5;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
