@@ -4,5 +4,5 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/casinobonustracker/',   // 👈 important for GitHub Pages
+  base: '/',   // 👈 important for GitHub Pages
 })
